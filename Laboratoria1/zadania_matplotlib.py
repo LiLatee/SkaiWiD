@@ -34,16 +34,6 @@ def draw_contour_3d(points, sides):
         zs.append(a[2])
         plt.plot(xs, ys, zs, color="blue")
 
-# def hammingDistance(vec1, vec2):
-#     return np.count_nonzero((vec1==vec2) == False)
-
-def distance(vec1, vec2):
-    dist = 0
-    for v1, v2 in zip(vec1, vec2):
-        if v1 != v2:
-            dist += 1
-    return dist
-
 def draw_contour_3d_V2(points):
     """Draws contour of the 3D figure based on the description of its sides.
 
