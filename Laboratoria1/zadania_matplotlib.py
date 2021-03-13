@@ -45,7 +45,7 @@ def convex_comb_general(points, limit=1.0, step_arange=0.1, tabs=""):
     """
     # TODO: Zadanie 4.2: Rekurencyjna implementacja (albo zupełnie własna, rekurencja to propozycja).
     
-    lambdas = np.arange(0, limit, step_arange)
+    lambdas = np.arange(0, limit+0.000001, step_arange)
     def temp(nOfNodes, lambdas, currentLambdasList, resultList):
         if nOfNodes == 1:
             l = 1 - sum(currentLambdasList)
