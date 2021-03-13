@@ -33,19 +33,6 @@ def draw_contour_3d(points, sides):
         ys.append(a[1])
         zs.append(a[2])
         plt.plot(xs, ys, zs, color="blue")
-
-def draw_contour_3d_V2(points):
-    """Draws contour of the 3D figure based on the description of its sides.
-
-    :param points: list of numpy arrays describing nodes of the figure.
-    :param sides: list containing description of the figure's sides. Each side is described by a list of indexes of elements in points.
-    """
-    combins = list(it.combinations(points, 2))
-    for c in combins:
-        if distance(c[0], c[1]) == 1:
-            x,y,z = zip(*c)
-            plt.plot(x,y,z, 'b', linewidth=1.0)
-        
         
 def convex_comb_general(points, limit=1.0, step_arange=0.1, tabs=""):
     """Generates all linear convex combinations of points with the specified precision.
