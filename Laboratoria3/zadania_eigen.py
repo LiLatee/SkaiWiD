@@ -62,8 +62,8 @@ def EVD_decomposition(A):
     print("K: \n", K)
     L = np.diag(values)
     print("L: \n", L)
-    print("K^-1: \n", K.T)
     inv_K =  np.linalg.inv(K)
+    print("K^-1: \n", inv_K)
     A2 = np.matmul(np.matmul(K,L), inv_K)
     print("A2: \n", A2)
     print("="*100)
@@ -113,17 +113,20 @@ def plot_attractors(A, vectors):
             
    # Rysujemy podane w argumencie funkcji wektory w kolorze wektora własnego (lub przeciwnego), jeśli jest to ich atraktor.
     for v in vectors:
-        temp = v
-#         print("VEC===============: ", v)
-        for i, eigvec in enumerate(eigvecs):
+        v = normalize(v)
+        temp = v.copy()
+        make_black = True
+        for i, eigvec in enumerate(eigvecs): 
             for j in range(100):
                 temp = normalize(A.dot(temp))
-                if len(set(values)) == 1:
-                    plt.quiver(0.0, 0.0, v[0], v[1], width=0.006, color='black', scale_units='xy', angles='xy', scale=1, zorder=4)
-                    break
                 if (np.allclose(temp, eigvec, atol=0.01)):
                     plt.quiver(0.0, 0.0, v[0], v[1], width=0.006, color=colors[i], scale_units='xy', angles='xy', scale=1, zorder=4)
+                    make_black = False
                     break
+
+            if make_black:
+                plt.quiver(0.0, 0.0, v[0], v[1], width=0.006, color='black', scale_units='xy', angles='xy', scale=1, zorder=4)
+
 
     plt.xlim([-3, 3])
     plt.ylim([-3, 3])
