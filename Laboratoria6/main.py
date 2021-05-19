@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+from numpy.linalg.linalg import _raise_linalgerror_svd_nonconvergence
 from skimage import io
 from skimage import img_as_float, img_as_uint
 import matplotlib.pyplot as plt
@@ -119,7 +120,7 @@ def custom_svd(img, k):
     image_reshaped = img.reshape((shape[0], shape[1] * 3))
     print("reshaped: ", image_reshaped.shape)
 
-    k = min(image_reshaped.shape[0], image_reshaped.shape[1])
+    # U, S, V = np.linalg.svd(image_reshaped, full_matrices=False)
 
     ### V
     imgT_img = np.dot(image_reshaped.T, image_reshaped)
@@ -129,21 +130,22 @@ def custom_svd(img, k):
     v = eigenvectorsV[:, eigenvaluesV_sorted_ids]
     print("v.shape: ", v.shape)
 
-    s = np.diag(eigenvaluesV_sorted)
-    s = add_padding(s, image_reshaped.shape[0], image_reshaped.shape[1]).T
-    print("s.shape: ", s.shape)
-
     ### SIGMA
-    s_plus = np.where(s == 0, 0, 1 / s)
+    s = np.diag(np.sqrt(eigenvaluesV_sorted))
+    print("s.shape: ", s.shape)
+    s = add_padding(s, image_reshaped.shape[0], image_reshaped.shape[1])
+    print("s_pad.shape: ", s.shape)
+
+    s_T = add_padding(s, image_reshaped.shape[0], image_reshaped.shape[1]).T
+    s_plus = np.where(s_T == 0, 0, 1 / s_T)
     print("s_plus.shape: ", s_plus.shape)
 
     ### U
     u = np.dot(image_reshaped, np.dot(v, s_plus))
-    print("v.shape: ", v.shape)
+    print("u.shape: ", u.shape)
 
-    compressed = np.dot(u, np.dot(s, v))
-    print(compressed.min())
-    print(compressed.max())
+    compressed = np.dot(u[:, :k], np.dot(s[:k, :k], v.T[:k, :]))
+    # compressed = np.interp(compressed, (compressed.min(), compressed.max()), (0, 1))
     compressed_reshaped = compressed.reshape(shape)
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 7))
